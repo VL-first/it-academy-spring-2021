@@ -1,21 +1,19 @@
-version: 2.1
+from time import localtime
 
-orbs:
-  python: circleci/python@0.2.1
+activities = {8: 'Sleeping',
+              9: 'Commuting',
+              17: 'Working',
+              18: 'Commuting',
+              20: 'Eating',
+              22: 'Resting'}
 
-jobs:
-  build-and-test:
-    executor: python/default
-    steps:
-      - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
-      - run:
-          command: ./manage.py test
-          name: Test
+time_now = localtime()
+hour = time_now.tm_hour
 
-workflows:
-  main:
-    jobs:
-      - build-and-test
+for activity_time in sorted(activities.keys()):
+    if hour < activity_time:
+        print(activities[activity_time])
+        break
+else:
+    print('Unknown, AFK or sleeping!')
+
